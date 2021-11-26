@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <div id="gallery">
+    <div class="error">Неверный URL изображения</div>
+    <form action="" class="form-widget">
+      <label class="lable-name">
+        <span>Название</span>
+        <input type="text" class="input-name" required>
+      </label>
+      <label class="lable-src">
+        <span>Ссылка на изображение</span>
+        <input type="text" class="input-src" required>
+      </label>
+      <div class="buttons">
+        <button type="button" class="button btn-add">Добавить</button>
+        <button type="button" class="button btn-download">Загрузить</button>
+      </div>
+    </form>
+    <div class="dnd none">
+      Drag and Drop files here or Click to select
+      <input accept="image/*" type="file" class="dnd-input" multiple>
+      <span class="dnd-close"></span>
+    </div>
+    <div class="images-list"></div>
+  </div>
+</body>
+</html>

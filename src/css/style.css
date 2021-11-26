@@ -1,0 +1,148 @@
+* {
+    padding: 0px;
+    margin: 0px;
+}
+
+body {
+    color: #999;
+}
+
+#gallery {
+    display: flex;
+    flex-direction: column;
+    margin-top: 30px;
+}
+
+.images-list {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.form-widget {
+    display: flex;
+    flex-direction: column;
+    width: 500px;
+    height: 200px;
+    margin: auto;
+    border: 1px solid #999;
+    border-radius: 30px;
+}
+
+.lable-name {
+    display: flex;
+    margin: 35px 20px 0px 20px;
+}
+
+.lable-src {
+    display: flex;
+    margin: 20px 20px 20px 20px;
+}
+
+.input-name{
+    width: 253px;
+    margin-left: auto;
+}
+
+.input-src {
+    position: relative;
+    width: 253px;
+    margin-left: auto;
+}
+
+.buttons {
+    display: flex;
+    width: 50%;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.button {
+    width: 100px;
+    height: 30px;
+    border-style: none;
+    border-radius: 20px;
+    margin-top: 30px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.image {
+    position: relative;
+    width: 100px;
+    height: 100px;
+    margin-left: 30px;
+    margin-top: 40px;
+    border: 1px solid #999;
+    background-size: cover;
+}
+
+.close-image {
+    position: absolute;
+    z-index: 1;
+    left: 90px;
+    top: -12px;
+    display: block;
+    border: 1px solid #999;
+    border-radius: 20px;
+    width: 20px;
+    height: 20px;
+    background-image: url('../img/cross.png');
+    background-size: cover;
+    background-color: white;
+}
+
+img {
+    width: inherit;
+    height: inherit;
+}
+
+.error {
+    position: absolute;
+    font-size: 12px;
+    display: none;
+    background: black;
+    padding: 5px;
+    border-radius: 5px;
+    color: #fff;
+}
+
+.none {
+    display: none;
+}
+
+.dnd{
+    position: relative;
+    margin-left: auto;
+    margin-right: auto;
+    width: 500px;
+    height: 120px;
+    color: black;
+    text-align: center;
+    padding-top: 80px;
+    border: 1px solid #999;
+    border-radius: 30px;
+}
+
+.dnd-input {
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    margin: 0;
+    opacity: 0;
+    width: 100%;
+}
+
+.dnd-close {
+    position: absolute;
+    top: 170px;
+    left: 470px;
+    width: 20px;
+    height: 20px;
+    z-index: 2;
+    border: 1px solid black;
+    border-radius: 50%;
+    background-image: url('../img/x-cross.png');
+    background-size: cover;
+}
