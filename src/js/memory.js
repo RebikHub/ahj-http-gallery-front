@@ -1,21 +1,32 @@
 export default class Memory {
   constructor() {
-    this.url = 'https://rebikhub-http.herokuapp.com';
-    this.getAllTickets = '?allTickets';
+    this.url = 'http://localhost:3333';
+    this.imgList = '?method=imgList';
+    this.imgDelete = '/?method=removeImage&id=';
+    this.imgUpload = '/?method=uploadImage';
   }
 
-  async save(ticket) {
-    const response = await fetch(`${this.url}${this.postCreate}`, {
+  async save(img) {
+    const response = await fetch(`${this.url}${this.imgUpload}`, {
       method: 'POST',
-      body: JSON.stringify(ticket),
+      body: JSON.stringify(img),
     });
-    const tickets = await response.text();
-    console.log(`Server response: ${tickets}`);
+    const result = await response.text();
+    console.log(`Server response: ${result}`);
+  }
+
+  async delete(id, img) {
+    const response = await fetch(`${this.url}${this.imgDelete}${id}`, {
+      method: 'POST',
+      body: JSON.stringify(img),
+    });
+    const result = await response.text();
+    console.log(`Server response: ${result}`);
   }
 
   async load() {
     try {
-      const response = await fetch(`${this.url}${this.getAllTickets}`);
+      const response = await fetch(`${this.url}${this.imgList}`);
       const tickets = await response.json();
       return tickets;
     } catch (error) {

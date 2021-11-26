@@ -1,5 +1,6 @@
 export default class Gallery {
-  constructor() {
+  constructor(memory) {
+    this.memory = memory;
     this.widget = document.querySelector('.form-widget');
     this.inputName = document.querySelector('.input-name');
     this.inputSrc = document.querySelector('.input-src');
@@ -13,6 +14,10 @@ export default class Gallery {
     this.textName = null;
     this.textSrc = null;
     this.error = null;
+    this.img = {
+      url: null,
+      name: null,
+    };
   }
 
   events() {
@@ -24,6 +29,7 @@ export default class Gallery {
     this.downloadButton.addEventListener('click', this.downloadClick.bind(this));
     this.closeDrop.addEventListener('click', this.closeDownload.bind(this));
     document.body.addEventListener('click', this.closeErrorBlock.bind(this));
+    this.dndInput.addEventListener('input', this.dndClick.bind(this));
   }
 
   inputNameValue(e) {
@@ -53,11 +59,9 @@ export default class Gallery {
   }
 
   addBlockWithImg(url, name) {
-    this.inputName.value = null;
-    this.inputSrc.value = null;
-    this.textName = null;
-    this.textSrc = null;
-    this.error = null;
+    this.img.url = url;
+    this.img.name = name;
+    this.memory.save(this.img);
     if (url) {
       const image = document.createElement('img');
       image.src = url;
@@ -66,6 +70,11 @@ export default class Gallery {
       image.onerror = () => this.verifyUrl();
       image.onload = () => this.addImage(image);
     }
+    this.inputName.value = null;
+    this.inputSrc.value = null;
+    this.textName = null;
+    this.textSrc = null;
+    this.error = null;
   }
 
   addImage(image) {
@@ -96,6 +105,12 @@ export default class Gallery {
       this.widget.classList.remove('none');
       this.dnd.classList.add('none');
     }
+  }
+
+  dndClick(ev) {
+    const files = Array.from(ev.currentTarget.files);
+    const url = URL.createObjectURL(files[0]);
+    this.addBlockWithImg(url, files[0].name);
   }
 
   drop() {
