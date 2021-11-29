@@ -9,7 +9,7 @@ export default class Memory {
   async save(img) {
     const response = await fetch(`${this.url}${this.imgUpload}`, {
       method: 'POST',
-      body: JSON.stringify(img),
+      body: img,
     });
     const result = await response.text();
     console.log(`Server response: ${result}`);
@@ -27,8 +27,8 @@ export default class Memory {
   async load() {
     try {
       const response = await fetch(`${this.url}${this.imgList}`);
-      const tickets = await response.json();
-      return tickets;
+      const result = await response.json();
+      return result;
     } catch (error) {
       const err = new Error(error);
       return err;

@@ -21,6 +21,7 @@ export default class Gallery {
   }
 
   events() {
+    // this.renderImages();
     this.inputName.addEventListener('input', this.inputNameValue.bind(this));
     this.inputName.addEventListener('keyup', this.inputEnter.bind(this));
     this.inputSrc.addEventListener('input', this.inputSrcValue.bind(this));
@@ -30,6 +31,14 @@ export default class Gallery {
     this.closeDrop.addEventListener('click', this.closeDownload.bind(this));
     document.body.addEventListener('click', this.closeErrorBlock.bind(this));
     this.dndInput.addEventListener('input', this.dndClick.bind(this));
+  }
+
+  async renderImages() {
+    const list = await this.memory.load();
+    for (const i of list) {
+      this.addBlockWithImg(i.url, i.name);
+    }
+    console.log(list);
   }
 
   inputNameValue(e) {
@@ -58,10 +67,27 @@ export default class Gallery {
     this.drop();
   }
 
-  addBlockWithImg(url, name) {
+  addBlockWithImg(url, name, file) {
     this.img.url = url;
     this.img.name = name;
-    this.memory.save(this.img);
+    console.log(this.img);
+    const formData = new FormData(this.img);
+    this.memory.save(formData);
+    console.log(...formData);
+    // if (file) {
+    //   // formData.append('file', file);
+    //   // formData.append(name, url);
+    //   this.memory.save(formData.append('file', file));
+    //   // for (const [key, value] of formData.entries()) {
+    //   //   console.log(key, value);
+    //   // }
+    // } else {
+    //   this.memory.save(formData.append('file', file));
+    //   // for (const [key, value] of formData.entries()) {
+    //   //   console.log(key, value);
+    //   // }
+    // }
+
     if (url) {
       const image = document.createElement('img');
       image.src = url;
@@ -85,7 +111,7 @@ export default class Gallery {
     divImg.appendChild(image);
     divImg.appendChild(span);
     this.imgsList.appendChild(divImg);
-    Gallery.removeImage();
+    this.removeImage();
   }
 
   verifyUrl() {
@@ -110,7 +136,7 @@ export default class Gallery {
   dndClick(ev) {
     const files = Array.from(ev.currentTarget.files);
     const url = URL.createObjectURL(files[0]);
-    this.addBlockWithImg(url, files[0].name);
+    this.addBlockWithImg(url, files[0].name, files[0]);
   }
 
   drop() {
@@ -121,14 +147,16 @@ export default class Gallery {
       ev.preventDefault();
       const files = Array.from(ev.dataTransfer.files);
       const url = URL.createObjectURL(files[0]);
-      this.addBlockWithImg(url, files[0].name);
+      this.addBlockWithImg(url, files[0].name, files[0]);
     });
   }
 
-  static removeImage() {
+  removeImage() {
     for (const item of document.querySelectorAll('.close-image')) {
       item.addEventListener('click', () => {
         item.closest('.image').remove();
+        const id = item.closest('.image').children[0].alt;
+        this.memory.delete(id);
       });
     }
   }
