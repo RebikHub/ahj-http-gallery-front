@@ -13,15 +13,16 @@ export default class Gallery {
     this.imgsList = document.querySelector('.images-list');
     this.textName = null;
     this.textSrc = null;
-    this.error = null;
+    this.update = false;
     this.img = {
       url: null,
       name: null,
+      file: null,
     };
   }
 
   events() {
-    // this.renderImages();
+    this.renderImages();
     this.inputName.addEventListener('input', this.inputNameValue.bind(this));
     this.inputName.addEventListener('keyup', this.inputEnter.bind(this));
     this.inputSrc.addEventListener('input', this.inputSrcValue.bind(this));
@@ -36,9 +37,8 @@ export default class Gallery {
   async renderImages() {
     const list = await this.memory.load();
     for (const i of list) {
-      this.addBlockWithImg(i.url, i.name);
+      this.addBlockWithImg(`${this.memory.url}/${i}`, i);
     }
-    console.log(list);
   }
 
   inputNameValue(e) {
@@ -51,12 +51,14 @@ export default class Gallery {
 
   inputEnter(e) {
     if (e.key === 'Enter' && this.textName !== null && this.textSrc !== null) {
+      this.update = true;
       this.addBlockWithImg(this.textSrc, this.textName);
     }
   }
 
   inputButtonClick() {
     if (this.textSrc !== null && this.textName !== null) {
+      this.update = true;
       this.addBlockWithImg(this.textSrc, this.textName);
     }
   }
@@ -67,31 +69,33 @@ export default class Gallery {
     this.drop();
   }
 
-  addBlockWithImg(url, name, file) {
-    this.img.url = url;
-    this.img.name = name;
-    console.log(this.img);
-    const formData = new FormData(this.img);
-    this.memory.save(formData);
-    console.log(...formData);
-    // if (file) {
-    //   // formData.append('file', file);
-    //   // formData.append(name, url);
-    //   this.memory.save(formData.append('file', file));
-    //   // for (const [key, value] of formData.entries()) {
-    //   //   console.log(key, value);
-    //   // }
-    // } else {
-    //   this.memory.save(formData.append('file', file));
-    //   // for (const [key, value] of formData.entries()) {
-    //   //   console.log(key, value);
-    //   // }
-    // }
+  sendImage() {
+    const formData = new FormData();
 
+    if (this.img.file) {
+      formData.append('file', this.img.file);
+      formData.append('name', this.img.name);
+      formData.append('url', this.img.url);
+      this.memory.save(formData);
+    } else {
+      formData.append('name', this.img.name);
+      formData.append('url', this.img.url);
+      this.memory.save(formData);
+    }
+    this.update = false;
+    this.img.url = null;
+    this.img.name = null;
+    this.img.file = null;
+  }
+
+  addBlockWithImg(url, name, file) {
     if (url) {
       const image = document.createElement('img');
       image.src = url;
       image.alt = name;
+      this.img.url = url;
+      this.img.name = name;
+      this.img.file = file;
 
       image.onerror = () => this.verifyUrl();
       image.onload = () => this.addImage(image);
@@ -100,7 +104,6 @@ export default class Gallery {
     this.inputSrc.value = null;
     this.textName = null;
     this.textSrc = null;
-    this.error = null;
   }
 
   addImage(image) {
@@ -111,6 +114,9 @@ export default class Gallery {
     divImg.appendChild(image);
     divImg.appendChild(span);
     this.imgsList.appendChild(divImg);
+    if (this.update) {
+      this.sendImage();
+    }
     this.removeImage();
   }
 
@@ -136,6 +142,7 @@ export default class Gallery {
   dndClick(ev) {
     const files = Array.from(ev.currentTarget.files);
     const url = URL.createObjectURL(files[0]);
+    this.update = true;
     this.addBlockWithImg(url, files[0].name, files[0]);
   }
 
@@ -147,6 +154,7 @@ export default class Gallery {
       ev.preventDefault();
       const files = Array.from(ev.dataTransfer.files);
       const url = URL.createObjectURL(files[0]);
+      this.update = true;
       this.addBlockWithImg(url, files[0].name, files[0]);
     });
   }
@@ -156,6 +164,7 @@ export default class Gallery {
       item.addEventListener('click', () => {
         item.closest('.image').remove();
         const id = item.closest('.image').children[0].alt;
+        this.update = false;
         this.memory.delete(id);
       });
     }
