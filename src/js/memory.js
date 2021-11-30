@@ -1,6 +1,6 @@
 export default class Memory {
   constructor() {
-    this.url = 'https://ahj-gallery-back.herokuapp.com/';
+    this.url = 'https://ahj-gallery-back.herokuapp.com';
     this.imgList = '?method=imgList';
     this.imgDelete = '/?method=removeImage&id=';
     this.imgUpload = '/?method=uploadImage';
