@@ -36,8 +36,10 @@ export default class Gallery {
 
   async renderImages() {
     const list = await this.memory.load();
-    for (const i of list) {
-      this.addBlockWithImg(`${this.memory.url}/${i}`, i);
+    if (list.length > 1) {
+      for (const i of list) {
+        this.addBlockWithImg(`${this.memory.url}/${i}`, i);
+      }
     }
   }
 
